@@ -6,6 +6,10 @@ Stack: **SwiftUI**, **MVVM**, **Coordinator** navigation, **async/await**, and a
 
 > Prices are not from a market API. The assessment uses Postman Echo (`wss://ws.postman-echo.com/raw`): the app generates random updates, sends them, and applies prices when the echo returns.
 
+<p align="center">
+  <img src="stock-list.jpg" alt="Symbols list screen" width="200" />
+</p>
+
 ---
 
 ## Requirements
