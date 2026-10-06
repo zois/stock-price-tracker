@@ -188,6 +188,7 @@ flowchart LR
   PctDesc --> Tie
   PctAsc --> Tie
   Tie --> UI[List rows]
+```
 
 ### Detail navigation
 
