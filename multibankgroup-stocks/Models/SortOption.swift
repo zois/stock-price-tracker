@@ -14,3 +14,14 @@ nonisolated enum SortOption: String, CaseIterable, Identifiable, Sendable {
 
     var id: String { rawValue }
 }
+
+// MARK: - SortDirection -
+
+nonisolated enum SortDirection: Sendable {
+    case ascending
+    case descending
+    
+    mutating func toggle() {
+        self = self == .ascending ? .descending : .ascending
+    }
+}

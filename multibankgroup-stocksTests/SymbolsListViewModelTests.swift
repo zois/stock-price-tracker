@@ -105,4 +105,23 @@ struct SymbolsListViewModelTests {
 
         #expect(selected == "BBB")
     }
+
+    @Test("selecting the same sort toggles direction")
+    func togglesSortDirection() {
+        let feed = FakePriceFeed(stocks: [])
+        let vm = SymbolsListViewModel(feed: feed, onSelectSymbol: { _ in })
+        vm.consume(.stocks(sampleStocks()))
+
+        // default: price descending → BBB, CCC, AAA
+        #expect(vm.sortedStocks.map(\.symbol) == ["BBB", "CCC", "AAA"])
+
+        vm.selectSort(.price) // → ascending
+        #expect(vm.sortDirection == .ascending)
+        #expect(vm.sortedStocks.map(\.symbol) == ["AAA", "CCC", "BBB"])
+
+        vm.selectSort(.priceChange) // new key → descending
+        #expect(vm.sortOption == .priceChange)
+        #expect(vm.sortDirection == .descending)
+        #expect(vm.sortedStocks.map(\.symbol) == ["BBB", "AAA", "CCC"])
+    }
 }

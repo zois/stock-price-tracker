@@ -49,6 +49,7 @@ struct SymbolsListView: View {
         VStack(alignment: .leading, spacing: 12) {
             LabeledContent {
                 ConnectionBanner(status: viewModel.connectionStatus)
+                Spacer(minLength: 0)
             } label: {
                 Text("Status")
                     .font(.caption.weight(.semibold))
@@ -82,20 +83,33 @@ struct SymbolsListView: View {
         systemImage: String
     ) -> some View {
         let selected = viewModel.sortOption == option
-
+        let directionIcon = viewModel.sortDirection == .ascending
+            ? "chevron.up"
+            : "chevron.down"
         return Button {
-            viewModel.sortOption = option
+            viewModel.selectSort(option)
         } label: {
-            Label(title, systemImage: systemImage)
-                .font(.caption)
-                .labelStyle(.titleAndIcon)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 6)
-                .background(selected ? Color.accentColor.opacity(0.15) : Color.clear)
-                .clipShape(.capsule)
+            HStack(spacing: 4) {
+                Image(systemName: systemImage)
+                Text(title)
+                if selected {
+                    Image(systemName: directionIcon)
+                }
+            }
+            .font(.caption)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(selected ? Color.accentColor.opacity(0.15) : Color.clear)
+            .clipShape(.capsule)
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(
+            selected
+                ? "\(title), \(viewModel.sortDirection == .ascending ? "ascending" : "descending")"
+                : title
+        )
     }
+
 }
 
 // MARK: - StockRowView -

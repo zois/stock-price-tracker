@@ -19,18 +19,24 @@ final class SymbolsListViewModel {
     private(set) var stocks: [Stock] = []
     private(set) var connectionStatus: ConnectionStatus = .disconnected
     var sortOption: SortOption = .price
+    var sortDirection: SortDirection = .descending
 
     var sortedStocks: [Stock] {
+        let ascending = sortDirection == .ascending
         switch sortOption {
         case .price:
-            stocks.sorted {
-                if $0.price != $1.price { return $0.price > $1.price }
+            return stocks.sorted {
+                if $0.price != $1.price {
+                    return ascending ? $0.price < $1.price : $0.price > $1.price
+                }
                 return $0.symbol < $1.symbol
             }
         case .priceChange:
-            stocks.sorted {
+            return stocks.sorted {
                 if $0.changePercent != $1.changePercent {
-                    return $0.changePercent > $1.changePercent
+                    return ascending
+                        ? $0.changePercent < $1.changePercent
+                        : $0.changePercent > $1.changePercent
                 }
                 return $0.symbol < $1.symbol
             }
@@ -95,6 +101,17 @@ final class SymbolsListViewModel {
             connectionStatus = status
         case .stocks(let stocks):
             self.stocks = stocks
+        }
+    }
+
+    // MARK: - Sorting -
+    
+    func selectSort(_ option: SortOption) {
+        if sortOption == option {
+            sortDirection.toggle()
+        } else {
+            sortOption = option
+            sortDirection = .descending
         }
     }
 }
