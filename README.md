@@ -41,7 +41,7 @@ Use any installed simulator name in the destination string.
 
 - 25 scrollable symbols: name, price, percent change
 - Start / Stop WebSocket feed with connection status
-- Sort by price or price change
+- Sort by price or price change; tap again to toggle ascending / descending
 - Detail screen: symbol title, live price, same change indicator, description
 - List and detail stay in sync while the feed runs
 
@@ -167,14 +167,27 @@ The UI updates **only after the echo** — that is what validates the WebSocket 
 
 ### Sorting
 
+Sorting is presentation state on the list ViewModel (`sortOption`, `sortDirection`, `sortedStocks`).
+
+- First tap on a sort key selects it and uses **descending** (high → low).
+- Tap the **same** key again to toggle **ascending** / **descending**.
+- Tap the **other** key to switch metric and reset to descending.
+- Ties break on symbol so equal values stay predictable.
+
 ```mermaid
 flowchart LR
-  Stocks[stocks from feed] --> Sort{sortOption}
-  Sort -->|price| ByPrice[price desc, then symbol]
-  Sort -->|priceChange| ByPct[changePercent desc, then symbol]
-  ByPrice --> UI[List rows]
-  ByPct --> UI
-```
+  Stocks[stocks from feed] --> Key{sortOption}
+  Key -->|price| DirPrice{sortDirection}
+  Key -->|priceChange| DirPct{sortDirection}
+  DirPrice -->|descending| PriceDesc[price high to low]
+  DirPrice -->|ascending| PriceAsc[price low to high]
+  DirPct -->|descending| PctDesc[changePercent high to low]
+  DirPct -->|ascending| PctAsc[changePercent low to high]
+  PriceDesc --> Tie[symbol tiebreaker]
+  PriceAsc --> Tie
+  PctDesc --> Tie
+  PctAsc --> Tie
+  Tie --> UI[List rows]
 
 ### Detail navigation
 
